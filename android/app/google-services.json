@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "791215781657",
+    "project_id": "breakout-room5",
+    "storage_bucket": "breakout-room5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791215781657:android:5b8bfd1a6a990399b9f788",
+        "android_client_info": {
+          "package_name": "com.example.todolist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkPUi0wdM13FNOZjQCojJl3WKhi_jzMdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
