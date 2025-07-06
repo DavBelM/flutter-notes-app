@@ -1,0 +1,16 @@
+Analyzing todolist...
+
+   info - lib/features/auth/presentation/screens/auth_screen.dart:91:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/presentation/screens/splash_screen.dart:103:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/presentation/screens/splash_screen.dart:106:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/presentation/screens/splash_screen.dart:155:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/bloc/notes_bloc.dart:71:16 - Unnecessary override. Try adding behavior in the overriding member or removing the override. - unnecessary_overrides
+   info - lib/features/notes/presentation/screens/notes_screen.dart:196:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/screens/notes_screen.dart:265:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/screens/notes_screen.dart:379:40 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/widgets/enhanced_note_card.dart:62:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib/features/notes/presentation/widgets/enhanced_note_card.dart:80:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/widgets/enhanced_note_card.dart:106:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notes/presentation/widgets/enhanced_note_card.dart:178:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+12 issues found.
