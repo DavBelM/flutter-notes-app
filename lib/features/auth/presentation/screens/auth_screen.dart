@@ -31,6 +31,9 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _submit() {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
     if (_formKey.currentState!.validate()) {
       if (_isSignUp) {
         context.read<AuthBloc>().add(
@@ -47,6 +50,22 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
       }
+    } else {
+      // Show a message if form validation fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.warning_amber_outlined, color: Colors.white),
+              const SizedBox(width: 8),
+              const Expanded(child: Text('Please fix the errors above')),
+            ],
+          ),
+          backgroundColor: Colors.orange,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -54,25 +73,42 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocListener<AuthBloc, AuthState>(
+        child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message),
+                  content: Row(
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(state.message)),
+                    ],
+                  ),
                   backgroundColor: AppColors.error,
+                  duration: const Duration(seconds: 4),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
             } else if (state is AuthAuthenticated) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Welcome ${state.user.email}!'),
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check_circle_outline, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text('Welcome ${state.user.email}!')),
+                    ],
+                  ),
                   backgroundColor: AppColors.success,
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
             }
           },
-          child: SingleChildScrollView(
+          builder: (context, state) {
+            return SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Form(
               key: _formKey,
@@ -119,7 +155,40 @@ class _AuthScreenState extends State<AuthScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.lg),
+                  // Error display
+                  if (state is AuthError) ...[
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.1),
+                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                        borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              state.message,
+                              style: TextStyle(
+                                color: AppColors.error,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  const SizedBox(height: AppSpacing.lg),
                   // Email field
                   TextFormField(
                     controller: _emailController,
@@ -134,13 +203,24 @@ class _AuthScreenState extends State<AuthScreen> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Email is required';
                       }
-                      if (!RegExp(
-                        r'^[^\s@]+@[^\s@]+\.[^\s@]+$',
-                      ).hasMatch(value)) {
-                        return 'Please enter a valid email';
+                      
+                      // Check for spaces
+                      if (value.contains(' ')) {
+                        return 'Email cannot contain spaces';
                       }
+                      
+                      // Check for valid email format
+                      if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      
+                      // Check for common mistakes
+                      if (value.endsWith('.')) {
+                        return 'Email cannot end with a dot';
+                      }
+                      
                       return null;
                     },
                   ),
@@ -174,11 +254,23 @@ class _AuthScreenState extends State<AuthScreen> {
                     obscureText: !_isPasswordVisible,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'Password is required';
                       }
-                      if (_isSignUp && value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                      
+                      if (_isSignUp) {
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        if (!RegExp(r'^(?=.*[a-zA-Z])').hasMatch(value)) {
+                          return 'Password must contain at least one letter';
+                        }
+                      } else {
+                        // For login, just check if not empty
+                        if (value.length < 1) {
+                          return 'Password is required';
+                        }
                       }
+                      
                       return null;
                     },
                   ),
@@ -294,7 +386,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 ],
               ),
             ),
-          ),
+            );
+          },
         ),
       ),
     );
