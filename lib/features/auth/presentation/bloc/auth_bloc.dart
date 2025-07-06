@@ -27,16 +27,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInRequested event,
     Emitter<AuthState> emit,
   ) async {
-    print('🔑 Sign In Requested for: ${event.email}');
     emit(AuthLoading());
     try {
       await _authRepository.signInWithEmailAndPassword(
         event.email,
         event.password,
       );
-      print('✅ Sign In Success');
     } catch (e) {
-      print('❌ Sign In Error: $e');
       emit(AuthError(e.toString()));
     }
   }
@@ -45,16 +42,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    print('📝 Sign Up Requested for: ${event.email}');
     emit(AuthLoading());
     try {
       await _authRepository.createUserWithEmailAndPassword(
         event.email,
         event.password,
       );
-      print('✅ Sign Up Success');
     } catch (e) {
-      print('❌ Sign Up Error: $e');
       emit(AuthError(e.toString()));
     }
   }
@@ -71,12 +65,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onAuthUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
-    print('👤 Auth User Changed: ${event.user?.email ?? 'null'}');
     if (event.user != null) {
-      print('✅ User Authenticated: ${event.user!.email}');
       emit(AuthAuthenticated(event.user!));
     } else {
-      print('❌ User Unauthenticated');
       emit(AuthUnauthenticated());
     }
   }

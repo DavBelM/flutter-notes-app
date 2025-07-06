@@ -15,10 +15,15 @@ class NotesRepositoryImpl implements NotesRepository {
           await _firestore
               .collection(_collection)
               .where('userId', isEqualTo: userId)
-              .orderBy('createdAt', descending: true)
               .get();
 
-      return querySnapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
+      final notes =
+          querySnapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
+
+      // Sort manually to avoid needing a composite index
+      notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      return notes;
     } catch (e) {
       throw Exception('Failed to fetch notes: $e');
     }
@@ -36,7 +41,8 @@ class NotesRepositoryImpl implements NotesRepository {
         updatedAt: now,
       );
 
-      await _firestore.collection(_collection).add(note.toFirestore());
+      final docData = note.toFirestore();
+      await _firestore.collection(_collection).add(docData);
     } catch (e) {
       throw Exception('Failed to add note: $e');
     }
@@ -65,17 +71,16 @@ class NotesRepositoryImpl implements NotesRepository {
 
   @override
   Stream<List<Note>> getNotesStream(String userId) {
-    print('🔥 Setting up Firestore stream for user: $userId');
     return _firestore
         .collection(_collection)
         .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-          print(
-            '🔥 Firestore snapshot received: ${snapshot.docs.length} documents',
-          );
-          return snapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
+          // Sort manually by createdAt to avoid index requirement
+          var notes =
+              snapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
+          notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return notes;
         });
   }
 }

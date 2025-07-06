@@ -5,7 +5,6 @@ import '../../../../core/theme/app_theme.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../widgets/auth_debug_panel.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -34,9 +33,6 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       if (_isSignUp) {
-        print(
-          '📝 Submitting Sign Up Form for: ${_emailController.text.trim()}',
-        );
         context.read<AuthBloc>().add(
           AuthSignUpRequested(
             email: _emailController.text.trim(),
@@ -44,9 +40,6 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
       } else {
-        print(
-          '🔑 Submitting Sign In Form for: ${_emailController.text.trim()}',
-        );
         context.read<AuthBloc>().add(
           AuthSignInRequested(
             email: _emailController.text.trim(),
@@ -299,8 +292,6 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  const AuthDebugPanel(),
                 ],
               ),
             ),

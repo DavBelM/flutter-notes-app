@@ -167,6 +167,71 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
+  // Helper methods for enhanced note display
+  Color _getNoteColor(int index) {
+    final colors = [
+      AppColors.noteDefault,
+      AppColors.noteIdea,
+      AppColors.notePersonal,
+      AppColors.noteWork,
+      AppColors.noteImportant,
+    ];
+    return colors[index % colors.length];
+  }
+
+  String _getNoteCategory(int index) {
+    final categories = ['Note', 'Idea', 'Personal', 'Work', 'Important'];
+    return categories[index % categories.length];
+  }
+
+  IconData _getNoteIcon(int index) {
+    final icons = [
+      Icons.note_outlined,
+      Icons.lightbulb_outline,
+      Icons.person_outline,
+      Icons.work_outline,
+      Icons.priority_high,
+    ];
+    return icons[index % icons.length];
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+      ),
+      child: IconButton(
+        icon: Icon(icon, size: 16, color: color),
+        onPressed: onPressed,
+        padding: EdgeInsets.zero,
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) {
+      return 'Today ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    } else if (difference.inDays < 7) {
+      final weekday =
+          ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][date.weekday - 1];
+      return '$weekday ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,11 +262,6 @@ class _NotesScreenState extends State<NotesScreen> {
         },
         child: BlocBuilder<NotesBloc, NotesState>(
           builder: (context, state) {
-            print('📱 Notes Screen State: ${state.runtimeType}');
-            if (state is NotesLoaded) {
-              print('📱 Notes Loaded with ${state.notes.length} notes');
-            }
-
             if (state is NotesLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is NotesLoaded) {
@@ -237,6 +297,11 @@ class _NotesScreenState extends State<NotesScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: AppSpacing.md),
                     child: ListTile(
+                      leading: Container(
+                        width: 8,
+                        height: double.infinity,
+                        color: _getNoteColor(index),
+                      ),
                       title: Text(
                         note.text,
                         style: GoogleFonts.inter(
@@ -244,23 +309,35 @@ class _NotesScreenState extends State<NotesScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      subtitle: Text(
-                        'Created: ${_formatDate(note.createdAt)}',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Category: ${_getNoteCategory(index)}',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            'Created: ${_formatDate(note.createdAt)}',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit_outlined),
+                          _buildActionButton(
+                            icon: Icons.edit_outlined,
                             color: AppColors.primary,
                             onPressed: () => _showEditNoteDialog(note),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete_outline),
+                          _buildActionButton(
+                            icon: Icons.delete_outline,
                             color: AppColors.error,
                             onPressed: () => _showDeleteConfirmation(note),
                           ),
@@ -304,15 +381,26 @@ class _NotesScreenState extends State<NotesScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddNoteDialog,
-        tooltip: 'Add Note',
-        child: const Icon(Icons.add),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: _showAddNoteDialog,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          tooltip: 'Add Note',
+          child: const Icon(Icons.add, color: Colors.white, size: 28),
+        ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 }
