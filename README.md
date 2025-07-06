@@ -48,17 +48,20 @@ lib/
 ## Setup Instructions
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/DavBelM/flutter-notes-app.git
    cd flutter-notes-app
    ```
 
 2. **Install dependencies**
+
    ```bash
    flutter pub get
    ```
 
 3. **Firebase Configuration**
+
    - Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/)
    - Enable Authentication and Firestore Database
    - Add your Flutter app to the Firebase project
@@ -88,11 +91,13 @@ lib/
 ## App Screenshots
 
 ### Authentication Flow
+
 - Splash Screen with app branding
 - Login/Signup forms with validation
 - Password confirmation and error handling
 
 ### Notes Management
+
 - Empty state with encouraging message
 - Category-based note organization
 - Create, edit, and delete operations
