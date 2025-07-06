@@ -23,13 +23,9 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('🔥 Firebase initialized successfully');
-    print('🔥 Project ID: ${DefaultFirebaseOptions.currentPlatform.projectId}');
-    print(
-      '🔥 Auth Domain: ${DefaultFirebaseOptions.currentPlatform.authDomain}',
-    );
   } catch (e) {
-    print('🔥 Firebase initialization error: $e');
+    // Handle Firebase initialization error
+    debugPrint('Firebase initialization error: $e');
   }
 
   runApp(const MyApp());

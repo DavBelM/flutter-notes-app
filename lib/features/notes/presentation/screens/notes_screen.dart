@@ -184,17 +184,6 @@ class _NotesScreenState extends State<NotesScreen> {
     return categories[index % categories.length];
   }
 
-  IconData _getNoteIcon(int index) {
-    final icons = [
-      Icons.note_outlined,
-      Icons.lightbulb_outline,
-      Icons.person_outline,
-      Icons.work_outline,
-      Icons.priority_high,
-    ];
-    return icons[index % icons.length];
-  }
-
   Widget _buildActionButton({
     required IconData icon,
     required Color color,

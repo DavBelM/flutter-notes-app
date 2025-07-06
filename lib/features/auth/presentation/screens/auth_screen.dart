@@ -56,7 +56,6 @@ class _AuthScreenState extends State<AuthScreen> {
       body: SafeArea(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            print('📱 Auth Screen State: ${state.runtimeType}');
             if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

@@ -13,22 +13,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    print('🔥 Firebase Auth instance: ${_firebaseAuth.hashCode}');
-    print(
-      '🔥 Current user before login: ${_firebaseAuth.currentUser?.email ?? 'none'}',
-    );
-
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      print('🔥 FirebaseAuthException Code: ${e.code}');
-      print('🔥 FirebaseAuthException Message: ${e.message}');
       throw _mapFirebaseAuthException(e);
     } catch (e) {
-      print('🔥 General Exception: $e');
       throw 'An unexpected error occurred: $e';
     }
   }
@@ -44,11 +36,8 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      print('🔥 FirebaseAuthException Code: ${e.code}');
-      print('🔥 FirebaseAuthException Message: ${e.message}');
       throw _mapFirebaseAuthException(e);
     } catch (e) {
-      print('🔥 General Exception: $e');
       throw 'An unexpected error occurred: $e';
     }
   }
@@ -62,7 +51,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   String _mapFirebaseAuthException(FirebaseAuthException e) {
-    print('🔥 Mapping Firebase Error: ${e.code}');
     switch (e.code) {
       case 'user-not-found':
         return 'No user found for that email.';
@@ -85,7 +73,6 @@ class AuthRepositoryImpl implements AuthRepository {
       case 'network-request-failed':
         return 'Network error. Please check your internet connection.';
       default:
-        print('🔥 Unmapped Firebase Error: ${e.code} - ${e.message}');
         return 'Authentication failed: ${e.message ?? e.code}';
     }
   }
